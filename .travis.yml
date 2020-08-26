@@ -1,0 +1,22 @@
+notifications:
+  email: false
+sudo: required
+services:
+- docker
+before_install:
+- docker run -dit --name emscripten -v $(pwd):/src trzeci/emscripten bash
+script:
+- docker exec -it emscripten ./decoder.sh
+deploy:
+  provider: releases
+  api_key:
+    secure: l6h9/QGTZTPKGObtRfFmJkChK2AaYejlqOpaO3ai/FgW8OlVZdEX4u4sFme2s4tTYB/p8xVaAnYu1XXoJSF5vBOqbBxdNP42te0Zx/JkylcdkVHMSjq3USGksioJeiBWY8+XmvpU+qktGeDgI98L0l7iME6iGTufWtJTGz9F6IgTatkhBBWCkg7eexVtFvBnXMSZ7Itq+B9w6VABmIbzGDBiJvY6pdDrW6jNtea3kG+7rzWmrcmpgoh9hL7mcWSRzja1SBOgJXSm261OAofnNo+SuAnsM5jcnqTUPVBJ9b78eDVDe5gfQdyvCjupWb/cEIEkN7UtjtEss8JG4HfksqkcDHn9pCI0bF2cI986aznO9zVU4yl8yGo0EfPkfRKdH1khqgvoPn58Rjqzds6rrnhfqqfr7z+ocYSX0IbCBlhZdmN1laMpzbkDwimxjPNsjp2L/CZ/yjPZwrKWCQE5uWDvev+QEspXUNzh7x7zBnN/7x6zESjcVMC/08DhVfiyr04TITlcGYQZGlXLTb1o1jPVNlMmmWoJnBdeuPv3lKDUPnLQkkN6Jnms7R19aURr/ZFoQ+v4kV+gjx6i/l2B5+mLj5UoPbAnr461u1viQbgecnBAGnT/AOiPLZVmqXOHpvRdXU5xRgT9FQQHnti5AE0l/4/4mP4u293IwTa7/ks=
+  file:
+    - src/decoder.js
+    - src/decoder.wasm
+  on:
+    repo: chandler-stimson/decoder.js
+  skip_cleanup: 'true'
+  on:
+    tags: true
+  overwrite: true
