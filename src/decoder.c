@@ -19,8 +19,8 @@ FILE **outFiles;
 
 void done(int code, const char *msg) {
     EM_ASM({
-      meta['Exit Message'] = UTF8ToString($1);
-      meta['Exit Code'] = $0;
+      Module.meta['Exit Message'] = UTF8ToString($1);
+      Module.meta['Exit Code'] = $0;
     }, code, msg);
 
     if (code != 0) {
@@ -142,22 +142,22 @@ int findAudioStream(const AVFormatContext* formatCtx) {
  */
 void printStreamInformation(const AVCodec* codec, const AVCodecContext* codecCtx, int audioStreamIndex) {
     EM_ASM({
-      meta['Codec Name'] = UTF8ToString($0);
+      Module.meta['Codec Name'] = UTF8ToString($0);
     }, codec->long_name);
     EM_ASM({
-      meta['Stream Index'] = $0;
+      Module.meta['Stream Index'] = $0;
     }, audioStreamIndex);
     EM_ASM({
-      meta['Sample Format'] = UTF8ToString($0);
+      Module.meta['Sample Format'] = UTF8ToString($0);
     }, av_get_sample_fmt_name(codecCtx->sample_fmt));
     EM_ASM({
-      meta['Sample Rate'] = $0;
+      Module.meta['Sample Rate'] = $0;
     }, codecCtx->sample_rate);
     EM_ASM({
-      meta['Sample Size'] = $0;
+      Module.meta['Sample Size'] = $0;
     }, av_get_bytes_per_sample(codecCtx->sample_fmt));
     EM_ASM({
-      meta['Channels'] = $0;
+      Module.meta['Channels'] = $0;
     }, codecCtx->channels);
 }
 
@@ -198,10 +198,10 @@ void drainDecoder(AVCodecContext* codecCtx, AVFrame* frame) {
 
 int decoder(const char *filename) {
     EM_ASM({
-      meta['LIBAVCODEC Version'] = $0 + '.' + $1 + '.' + $2;
+      Module.meta['LIBAVCODEC Version'] = $0 + '.' + $1 + '.' + $2;
     }, LIBAVCODEC_VERSION_MAJOR, LIBAVCODEC_VERSION_MINOR, LIBAVCODEC_VERSION_MICRO);
     EM_ASM({
-      meta['LIBAVFORMAT Version'] = $0 + '.' + $1 + '.' + $2;
+      Module.meta['LIBAVFORMAT Version'] = $0 + '.' + $1 + '.' + $2;
     }, LIBAVFORMAT_VERSION_MAJOR, LIBAVFORMAT_VERSION_MINOR, LIBAVFORMAT_VERSION_MICRO);
 
     int err = 0;
