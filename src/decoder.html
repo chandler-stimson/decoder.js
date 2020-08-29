@@ -4,51 +4,29 @@
   <title></title>
 </head>
 <body>
+  <input type="button" value="Loading..." id="play" disabled>
   <script type="text/javascript">
-    var meta = {};
+    var Module = {};
+    document.getElementById('play').onclick = async () => {
+      const play = o => {
+        console.log(o);
+        const source = o.context.createBufferSource();
+        source.buffer = o.audioBuffer;
+        source.connect(o.context.destination);
+        source.start();
+      };
 
-    var Module = {
-      onRuntimeInitialized: function() {
-        const input = 'input.mp3';
-
-        fetch('../inputs/' + input).then(r => r.arrayBuffer()).then(ab => {
-          const binary = new Uint8Array(ab);
-          FS.writeFile(input, binary);
-
-          const decoder = Module.cwrap('decoder', 'number', ['string', 'string']);
-          try {
-            decoder(input, 'out.pcm');
-          }
-          catch (e) {
-            console.log(e.message, meta['Exit Message']);
-            return;
-          }
-          console.log('meta', meta);
-          FS.unlink(input);
-
-          const channels = [];
-          for (let i = 0; i < meta['Channels']; i += 1) {
-            channels[i] = FS.readFile('channel_' + i);
-            FS.unlink('channel_' + i);
-          }
-          console.log(channels);
-          const context = new AudioContext();
-          const buffer = context.createBuffer(meta['Channels'], channels[0].byteLength / meta['Sample Size'], meta['Sample Rate']);
-
-          // fill the buffer with channel data
-          for (let i = 0; i < meta['Channels']; i += 1) {
-            console.log(buffer.getChannelData(i));
-            buffer.getChannelData(i).set(new Float32Array(channels.shift().buffer));
-          }
-
-          const source = context.createBufferSource();
-          source.buffer = buffer;
-          source.connect(context.destination);
-          source.start();
-        });
+      for (const name of ['input.wma', 'input.mp4']) {
+        await Module.decode({
+          name,
+          href: '../inputs/' + name
+        }).then(play).catch(e => console.error('error', e))
       }
     };
-
+    Module.onRuntimeInitialized = function() {
+      document.getElementById('play').value = 'Play';
+      document.getElementById('play').disabled = false;
+    };
   </script>
   <script type="text/javascript" src="decoder.js"></script>
 </body>

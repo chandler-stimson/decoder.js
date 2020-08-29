@@ -15,6 +15,7 @@
 #define STATIC_CAST(type, variable) C_CAST(type, variable)
 #define RAW_OUT_ON_PLANAR 0
 
+
 FILE **outFiles;
 
 void done(int code, const char *msg) {
@@ -142,7 +143,13 @@ int findAudioStream(const AVFormatContext* formatCtx) {
  */
 void printStreamInformation(const AVCodec* codec, const AVCodecContext* codecCtx, int audioStreamIndex) {
     EM_ASM({
+      Module.meta['Codec ID'] = $0;
+    }, codec->id);
+    EM_ASM({
       Module.meta['Codec Name'] = UTF8ToString($0);
+    }, codec->name);
+    EM_ASM({
+      Module.meta['Codec Long Name'] = UTF8ToString($0);
     }, codec->long_name);
     EM_ASM({
       Module.meta['Stream Index'] = $0;
@@ -198,6 +205,8 @@ void drainDecoder(AVCodecContext* codecCtx, AVFrame* frame) {
 
 int decoder(const char *filename) {
     EM_ASM({
+      Module.meta = {};
+
       Module.meta['LIBAVCODEC Version'] = $0 + '.' + $1 + '.' + $2;
     }, LIBAVCODEC_VERSION_MAJOR, LIBAVCODEC_VERSION_MINOR, LIBAVCODEC_VERSION_MICRO);
     EM_ASM({

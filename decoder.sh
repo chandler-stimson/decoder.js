@@ -53,6 +53,7 @@ emcc -Oz \
   -I. \
   -Llibavcodec -Llibavformat -Llibavutil -lavformat -lavcodec -lavutil \
   -o ../src/decoder.js ../src/decoder.c \
-  -s ALLOW_MEMORY_GROWTH=1 -s EXPORTED_FUNCTIONS='["_decoder"]' -s EXPORTED_RUNTIME_METHODS='["cwrap"]'
+  -s ALLOW_MEMORY_GROWTH=1 -s EXPORTED_FUNCTIONS='["_decoder"]' -s EXPORTED_RUNTIME_METHODS='["cwrap"]' \
+  --post-js ../src/post.js
 
 popd
