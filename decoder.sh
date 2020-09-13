@@ -5,8 +5,8 @@ apt-get install -y pkg-config
 
 # git clone --depth 1 --branch n4.0.2 https://github.com/FFmpeg/FFmpeg
 git clone --depth 1 https://github.com/FFmpeg/FFmpeg
+
 pushd FFmpeg
-git reset --hard ed987c55990290d87348ac1b4976f8504ff0d997
 
 emconfigure ./configure \
   --cc=emcc \
@@ -21,6 +21,7 @@ emconfigure ./configure \
   --disable-runtime-cpudetect \
   --disable-asm \
   --disable-fast-unaligned \
+  --disable-pthreads \
   --disable-w32threads \
   --disable-os2threads \
   --disable-debug \
@@ -52,10 +53,6 @@ emcc -Oz \
   -I. \
   -Llibavcodec -Llibavformat -Llibavutil -lavformat -lavcodec -lavutil \
   -o ../src/decoder.js ../src/decoder.c \
-  -s USE_PTHREADS=1 \
-  -s ALLOW_MEMORY_GROWTH=1 \
-  -s EXPORTED_FUNCTIONS='["_decoder"]' \
-  -s EXPORTED_RUNTIME_METHODS='["cwrap"]' \
-  --post-js ../src/post.js
+  -s ALLOW_MEMORY_GROWTH=1 -s EXPORTED_FUNCTIONS='["_decoder"]' -s EXPORTED_RUNTIME_METHODS='["cwrap"]'
 
 popd

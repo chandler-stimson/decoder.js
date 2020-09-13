@@ -14,6 +14,8 @@ deploy:
   file:
     - src/decoder.js
     - src/decoder.wasm
+    - src/wrapper.js
+    - src/worker.js
   on:
     repo: chandler-stimson/decoder.js
   skip_cleanup: 'true'

@@ -4,30 +4,27 @@
   <title></title>
 </head>
 <body>
-  <input type="button" value="Loading..." id="play" disabled>
+  <input type="button" value="Play" id="play">
+  <script type="text/javascript" src="wrapper.js"></script>
   <script type="text/javascript">
-    var Module = {};
     document.getElementById('play').onclick = async () => {
       const play = o => {
-        console.log(o);
         const source = o.context.createBufferSource();
         source.buffer = o.audioBuffer;
         source.connect(o.context.destination);
         source.start();
       };
 
-      for (const name of ['input.wma', 'input.mp4']) {
-        await Module.decode({
+      for (const name of ['valid.wma', 'valid.mp4', 'invalid.aac']) {
+        await window.decoder.decode({
           name,
           href: '../inputs/' + name
-        }).then(play).catch(e => console.error('error', e))
+        }).then(o => {
+          console.log(name, o);
+          play(o);
+        }).catch(e => console.error('Decoding Error', e))
       }
     };
-    Module.onRuntimeInitialized = function() {
-      document.getElementById('play').value = 'Play';
-      document.getElementById('play').disabled = false;
-    };
   </script>
-  <script type="text/javascript" src="decoder.js"></script>
 </body>
 </html>
