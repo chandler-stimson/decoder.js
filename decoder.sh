@@ -5,8 +5,8 @@ apt-get install -y pkg-config
 
 # git clone --depth 1 --branch n4.0.2 https://github.com/FFmpeg/FFmpeg
 git clone --depth 1 https://github.com/FFmpeg/FFmpeg
-
 pushd FFmpeg
+git reset --hard ed987c55990290d87348ac1b4976f8504ff0d997
 
 emconfigure ./configure \
   --cc=emcc \

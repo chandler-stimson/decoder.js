@@ -54,7 +54,10 @@
       throw Error('decoder is not ready');
     }
   };
-  Module.version = '0.1.1';
+  Module.versions = {
+    core: '0.1.2',
+    ffmpeg: 'ed987c55990290d87348ac1b4976f8504ff0d997'
+  };
   Module.decode = function({name, href, arrayBuffer}) {
     return new Promise((resolve, reject) => {
       jobs.push({name, href, arrayBuffer, resolve, reject});
